@@ -39,11 +39,18 @@ intelflags () {
 	
 	export INTEL_CFLAGS="-arch $1"
 	export INTEL_CFLAGS="$INTEL_CFLAGS -I$SIMSDKROOT/usr/include"
+	#remove miphoneos-version-min from INTEL_CFLAGS, INTEL_LDFLAGS if want to compile tiff
+	export INTEL_CFLAGS="$INTEL_CFLAGS -miphoneos-version-min=$SDKMINVER"
+	export INTEL_LDFLAGS="-arch $1"
+	export INTEL_LDFLAGS="$INTEL_LDFLAGS -miphoneos-version-min=$SDKMINVER"
+	export INTEL_CPPFLAGS="-arch $1"
 	
 	# apply INTEL_CC values
 	export CC="$INTEL_CC"
 	export CCP="$INTEL_CC -E"
 	export CFLAGS="$INTEL_CFLAGS"
+	export LDFLAGS="$INTEL_LDFLAGS"
+	export CPPFLAGS="$INTEL_CPPFLAGS"
 	export LD="$INTEL_LD"
 	
 	# export what we are building for

@@ -51,7 +51,7 @@ tiff () {
 			accumul="$accumul -arch $i $LIB_DIR/$LIBNAME_tiff.$i"
 		done
 		# combine the static libraries
-		try lipo $accumul -create -output $LIB_DIR/$LIBNAME_tiff
+		try xcrun -sdk iphoneos lipo $accumul -create -output $LIB_DIR/$LIBNAME_tiff
 		echo "[+ DONE]"
 	fi
 }

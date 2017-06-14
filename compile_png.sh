@@ -52,7 +52,7 @@ png () {
 			accumul="$accumul -arch $i $LIB_DIR/libpng.a.$i"
 		done
 		# combine the static libraries
-		try lipo $accumul -create -output $LIB_DIR/libpng.a
+		try xcrun -sdk iphoneos lipo $accumul -create -output $LIB_DIR/libpng.a
 		echo "[+ DONE]"
 	fi
 }

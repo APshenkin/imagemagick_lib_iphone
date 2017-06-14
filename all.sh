@@ -41,7 +41,9 @@ prepare
 for i in $ARCHS; do
 	png $i
 	jpeg $i
-	tiff $i
+# Comment tiff build, because the best way to compile it is here https://github.com/ashtons/libtiff-ios
+# If you still want to compile with this script, you have to remove several flags in flags.sh and compile_im.sh
+#	tiff $1
 	im $i
 done
 

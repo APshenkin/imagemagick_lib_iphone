@@ -39,37 +39,28 @@ im () {
 		save
 		armflags $1
 		export CC="$(xcode-select -print-path)/usr/bin/gcc" # override clang
-		export CPPFLAGS="-I$LIB_DIR/include/jpeg -I$LIB_DIR/include/png -I$LIB_DIR/include/tiff"
+		export CPPFLAGS="-I$LIB_DIR/include/jpeg -I$LIB_DIR/include/png"
 		export CFLAGS="$CFLAGS -DTARGET_OS_IPHONE"
-		export LDFLAGS="$LDFLAGS -L$LIB_DIR/jpeg_${BUILDINGFOR}_dylib/ -L$LIB_DIR/png_${BUILDINGFOR}_dylib/ -L$LIB_DIR/tiff_${BUILDINGFOR}_dylib/ -L$LIB_DIR"
+		export LDFLAGS="$LDFLAGS -L$LIB_DIR/jpeg_${BUILDINGFOR}_dylib/ -L$LIB_DIR/png_${BUILDINGFOR}_dylib/ -L$LIB_DIR"
 		echo "[|- CONFIG $BUILDINGFOR]"
+		#to compile with tiff remove --without-tiff
 		try ./configure prefix=$IM_LIB_DIR --host=arm-apple-darwin \
 			--disable-opencl --disable-largefile --with-quantum-depth=8 --with-magick-plus-plus \
-			--without-perl --without-x --disable-shared --disable-openmp --without-bzlib --without-freetype 
+			--without-perl --without-tiff --without-x --disable-shared --disable-openmp --without-bzlib --without-freetype
 		im_compile
 		restore
-	elif [ "$1" == "x86_64" ]; then
+	elif [ "$1" == "x86_64" ] || [ "$1" == "i386" ]; then
 		save
 		intelflags $1
-		export CPPFLAGS="$CPPFLAGS -I$LIB_DIR/include/jpeg -I$LIB_DIR/include/png -I$LIB_DIR/include/tiff -I$SIMSDKROOT/usr/include"
-		export LDFLAGS="$LDFLAGS -L$LIB_DIR/jpeg_${BUILDINGFOR}_dylib/ -L$LIB_DIR/png_${BUILDINGFOR}_dylib/ -L$LIB_DIR/tiff_${BUILDINGFOR}_dylib/ -L$LIB_DIR"
+		export CPPFLAGS="$CPPFLAGS -I$LIB_DIR/include/jpeg -I$LIB_DIR/include/png -I$SIMSDKROOT/usr/include"
+		export LDFLAGS="$LDFLAGS -L$LIB_DIR/jpeg_${BUILDINGFOR}_dylib/ -L$LIB_DIR/png_${BUILDINGFOR}_dylib/ -L$LIB_DIR"
 		echo "[|- CONFIG $BUILDINGFOR]"
+		#to compile with tiff remove --without-tiff
 		try ./configure prefix=$IM_LIB_DIR --host=${BUILDINGFOR}-apple-darwin --disable-opencl \
-			--disable-largefile --with-quantum-depth=8 --with-magick-plus-plus --without-perl --without-x \
+			--disable-largefile --with-quantum-depth=8 --with-magick-plus-plus --without-perl --without-tiff --without-x \
 			--disable-shared --disable-openmp --without-bzlib --without-freetype --without-threads --disable-dependency-tracking
 		im_compile
 		restore
-	elif [ "$1" == "i386" ]; then
-                save
-                intelflags $1
-                export CPPFLAGS="$CPPFLAGS -arch ${BUILDINGFOR} -I$LIB_DIR/include/jpeg -I$LIB_DIR/include/png -I$LIB_DIR/include/tiff -I$SIMSDKROOT/usr/include"
-                export LDFLAGS="$LDFLAGS -arch ${BUILDINGFOR} -L$LIB_DIR/jpeg_${BUILDINGFOR}_dylib/ -L$LIB_DIR/png_${BUILDINGFOR}_dylib/ -L$LIB_DIR/tiff_${BUILDINGFOR}_dylib/ -L$LIB_DIR"
-                echo "[|- CONFIG $BUILDINGFOR]"
-                try ./configure prefix=$IM_LIB_DIR --host=${BUILDINGFOR}-apple-darwin --disable-opencl \
-                        --disable-largefile --with-quantum-depth=8 --with-magick-plus-plus --without-perl --without-x \
-                        --disable-shared --disable-openmp --without-bzlib --without-freetype --without-threads --disable-dependency-tracking
-                im_compile
-                restore
 	else
 		echo "[ERR: Nothing to do for $1]"
 	fi
@@ -83,7 +74,7 @@ im () {
 			accumul="$accumul -arch $i $LIB_DIR/$LIBNAME_core.$i"
 		done
 		# combine the static libraries
-		try lipo $accumul -create -output $LIB_DIR/libMagickCore.a
+		try xcrun -sdk iphoneos lipo $accumul -create -output $LIB_DIR/libMagickCore.a
 		echo "[+ DONE]"
 	fi
 
@@ -96,7 +87,7 @@ im () {
 			accumul="$accumul -arch $i $LIB_DIR/$LIBNAME_wand.$i"
 		done
 		# combine the static libraries
-		try lipo $accumul -create -output $LIB_DIR/libMagickWand.a
+		try xcrun -sdk iphoneos lipo $accumul -create -output $LIB_DIR/libMagickWand.a
 		echo "[+ DONE]"
 	fi
 
@@ -109,7 +100,7 @@ im () {
 			accumul="$accumul -arch $i $LIB_DIR/$LIBNAME_magickpp.$i"
 		done
 		# combine the static libraries
-		try lipo $accumul -create -output $LIB_DIR/libMagick++.a
+		try xcrun -sdk iphoneos lipo $accumul -create -output $LIB_DIR/libMagick++.a
 		echo "[+ DONE]"
 	fi
 }

@@ -10,3 +10,4 @@ IMPORT_ME/*
 *.xcodeproj/*.perspectivev3
 *.xcodeproj/*.xcworkspace
 *.xcodeproj/xcuserdataa
+.idea/

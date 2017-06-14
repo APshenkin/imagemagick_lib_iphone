@@ -50,7 +50,7 @@ jpeg () {
 			accumul="$accumul -arch $i $LIB_DIR/$LIBNAME_jpeg.$i"
 		done
 		# combine the static libraries
-		try lipo $accumul -create -output $LIB_DIR/$LIBNAME_jpeg
+		try xcrun -sdk iphoneos lipo $accumul -create -output $LIB_DIR/$LIBNAME_jpeg
 		echo "[+ DONE]"
 	fi
 }
