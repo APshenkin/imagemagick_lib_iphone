@@ -1,26 +1,18 @@
-<h2>Compiled downloads</h2>
+## Compiled downloads
 
-You can grab the latest compiled ImageMagick directly from their <a
-href="ftp://ftp.imagemagick.org/pub/ImageMagick/iOS/">ftp</a> or any mirror.
+You can grab the latest compiled ImageMagick from releases
 
-There are always 2 packages for the compiled ImageMagick:
-* iOSMagick-VERSION-libs.zip
-* iOSMagick-VERSION.zip
-
-The first one includes headers and compiled libraries that have been used to
-compile ImageMagick. Most users would need this one.
-
-<h2>Compiling ImageMagick and IMDelegates</h2>
+## Compiling ImageMagick and IMDelegates
 
 The directory structure has to be:
 
-<pre>
+```
 ./build/ImageMagick-VERSION/       <- ImageMagick top directory
 ./build/IMDelegates/               <- Some delegates: jpeg + png + tiff
 ./build/IMDelegates/jpeg-9b/       <- jpeg lib
 ./build/IMDelegates/libpng-1.6.28  <- png lib
 ./build/IMDelegates/tiff-4.0.4     <- tiff lib
-</pre>
+```
 
 If you don't have this directory structure you can either create it or try
 change around the script. You can find the delegate libraries on the <a
@@ -28,7 +20,7 @@ href="ftp://ftp.imagemagick.org/pub/ImageMagick/delegates/">ImageMagick ftp</a>
 or on the respective websites.
 
 The main script to run is:
-<pre>./all.sh VERSION|clean</pre> where VERSION is the version of ImageMagick
+```./all.sh VERSION|clean``` where VERSION is the version of ImageMagick
 you want to compile (e.g., 6.8.9-10), if 'clean' is passed, the script will
 clean all the log files and the directories it created.
 
@@ -36,28 +28,23 @@ Upon successful compilation a folder called "IMPORT_ME" will be created from
 where you start the script: you can import it into your XCode project.
 
 The rest of the scripts are invoked by all.sh and offer the following:
-<pre>./env.sh</pre> sets up environment variables used by the other scripts.
+```./env.sh``` sets up environment variables used by the other scripts.
 This is most probably the script you want to modify to suit your needs (e.g.,
 set up which architectures will be compiles, verbosity level, ...)
-<pre>./flags.sh</pre> saves, sets up and restores compiler-related values
-<pre>./utils.sh</pre> offers some functions used in the other scripts
-<pre>./compile_*.sh</pre> are the scripts used to compile the respective component
+```./flags.sh``` saves, sets up and restores compiler-related values
+```./utils.sh``` offers some functions used in the other scripts
+```./compile_*.sh``` are the scripts used to compile the respective component
 
-<h2>XCode project settings</h2>
+To compile tiff, read comments from all.sh script
+
+## XCode project settings
 
 After including everything into XCode please also make sure to have these settings (Build tab of the project information):
 
-* Other Linker Flags: -lMagickCore -lMagickWand -lz -lbz2 -ljpeg -lpng
+* Other Linker Flags: -lMagickCore -lMagickWand -lz -lbz2 -ljpeg -lpng (-ltiff if you compile with tiff)
 * Header Search Paths: $(SRCROOT) - make it Recursive
 * Library Search Paths: $(SRCROOT) - make it Recursive
 
-On the lower left click on the small-wheel and select: Add User-Defined Setting
-* Key: OTHER_CFLAGS
-* Value: -Dmacintosh=1
-
-In Link Binary with Libraries under Build Phases, you may also need to add:
-* libxml2.dylib
-
-<h2>Sample project</h2>
+## Sample project
 
 A more or less updated project is found in the IM_Test subfolder
